@@ -43,7 +43,7 @@ html
     #content
       form#side_panel
         section
-          h3 rTGS | This Application plots a real time graph using CoAP protocol at application layer.
+          h3 rTGS | This Application plots a real time graph using HTTP protocol at application layer.
           label IPV6 Address:
           input#mote-url(type='text', value='aaaa::c30c:0:0:2')
           label Request Interval (milliseconds):
@@ -90,7 +90,7 @@ html
           #smoother
         section
           label Filename:
-          input#inputFileNameToSaveAs(value='mote-data-logs.txt')
+          input#inputFileNameToSaveAs(value='mote-data-logs.csv')
           button(type='button', onclick='saveTextAsFile()') Save Text to File
           label Select a File to Load:
           input#fileToLoad(type='file')
@@ -105,6 +105,11 @@ html
         div
           textarea#inputTextToSave(style='width:100%;height:60px')
     script.
+      function addText(text) {
+      document.getElementById("inputTextToSave").value += text
+      }
+      // Add csv clomn name for each values 
+      var text = "ID,MessageID,UpTime,ClockTime,Temperature,Battery\n";
       // set up our data series with 150 random data points
       var seriesData = [[{ x: 0, y: 0}], [{ x: 0, y: 0}], [{ x: 0, y: 0 }], [{ x: 0, y: 0 }]];
       var random = new Rickshaw.Fixtures.RandomData(150);
@@ -227,7 +232,7 @@ html
       seriesData[2].push( { x: UpTime, y: MessageID } );
       random.addData(seriesData);
       graph.update();
-      var text = "ID: " + counter++ + "  MessageID:  " + MessageID + "  UpTime:  " + UpTime + "  ClockTime:  " + ClockTime + "  Temperature:  " + Temperature + "  Battery:  " + Battery + "\n";
+      var text = counter++ + "," + MessageID + "," + UpTime + "," + ClockTime + "," + Temperature + "," + Battery + "\n";
       addText(text);
       //console.log(payload);
       };
@@ -284,9 +289,6 @@ html
       document.getElementById("inputTextToSave").value = textFromFileLoaded;
       };
       fileReader.readAsText(fileToLoad, "UTF-8");
-      }
-      function addText(text) {
-      document.getElementById("inputTextToSave").value += text
       }
       var getLatestData = function(){
       var script_id = null;
