@@ -113,6 +113,9 @@ html
       addText(text);
       // set up our data series with 150 random data points
       var seriesData = [[{ x: 0, y: 0}], [{ x: 0, y: 0}], [{ x: 0, y: 0 }], [{ x: 0, y: 0 }]];
+      //var random = new Rickshaw.Fixtures.RandomData(150);
+      //for (var i = 0; i < 150; i++) {
+      //random.addData(seriesData);}
       var palette = new Rickshaw.Color.Palette( { scheme: 'classic9' } );
       // instantiate our graph!
       var graph = new Rickshaw.Graph( {
@@ -218,6 +221,8 @@ html
       seriesData[0].push( { x: UpTime, y: Temperature } );
       seriesData[1].push( { x: UpTime, y: Battery } );
       seriesData[2].push( { x: UpTime, y: MessageID } );
+      //random.removeData(seriesData);
+      //random.addData(seriesData);
       graph.update();
       var text = counter++ + "," + MessageID + "," + UpTime + "," + ClockTime + "," + Temperature + "," + Battery + "\n";
       addText(text);
