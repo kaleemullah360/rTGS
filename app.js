@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var datamqtt = require('./routes/datamqtt');
+var datacoap = require('./routes/datacoap');
 var rtgs_http = require('./routes/rtgs-http');
 
 
@@ -26,6 +28,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/datamqtt', datamqtt);
+app.use('/datacoap', datacoap);
 app.use('/http', rtgs_http);
 
 // catch 404 and forward to error handler
