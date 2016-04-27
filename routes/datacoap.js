@@ -3,6 +3,7 @@ const decoder = new StringDecoder('utf8');
 var express = require('express');
 var router = express.Router();
 
+// the same connection is opened in another js page
 /*
 var URL = require('url')
 var opts = URL.parse('coap://[aaaa::c30c:0:0:2]:5683/test/push')
