@@ -9,7 +9,7 @@ html
     script(src='/js/jquery.min.js')
     script(src='/vendor/d3.v3.js')
     script.
-      jQuery.noConflict();  
+      jQuery.noConflict();
     script(src='/js/jquery-ui.min.js')
     script(src='/src/js/Rickshaw.js')
     script(src='/src/js/Rickshaw.Class.js')
@@ -43,9 +43,10 @@ html
     #content
       form#side_panel
         section
-          h3 rTGS | This Application plots a real time graph using HTTP protocol at application layer.
+          h3
+            | rTGS | This Application plots a real time graph using HTTP protocol at application layer.
           label IPV6 Address:
-          input#mote-url(type='text', value='aaaa::c30c:0:0:2')
+          input#mote-url(type='text', value='aaaa::c30c:0:0:3')
           label Request Interval (milliseconds):
           input#mote-interval(type='number', value='5000')
           button(type='button', autofocus='', onclick='javascript: execute_graph()') Start
@@ -108,14 +109,14 @@ html
       function addText(text) {
       document.getElementById("inputTextToSave").value += text
       }
-      // Add csv clomn name for each values 
-      var text = "ID,MessageID,UpTime,ClockTime,Temperature,Battery\n";
+      // Add csv clomn name for each values
+      var text = "ID,MessageID,UpTime,ClockTime,Temperature,Battery,Status,Protocol\n";
+      addText(text);
       // set up our data series with 150 random data points
       var seriesData = [[{ x: 0, y: 0}], [{ x: 0, y: 0}], [{ x: 0, y: 0 }], [{ x: 0, y: 0 }]];
-      var random = new Rickshaw.Fixtures.RandomData(150);
-      for (var i = 0; i < 3; i++) {
-      random.addData(seriesData);
-      }
+      //var random = new Rickshaw.Fixtures.RandomData(150);
+      //for (var i = 0; i < 150; i++) {
+      //random.addData(seriesData);}
       var palette = new Rickshaw.Color.Palette( { scheme: 'classic9' } );
       // instantiate our graph!
       var graph = new Rickshaw.Graph( {
@@ -137,7 +138,7 @@ html
       }, {
       color: palette.color(),
       data: seriesData[2],
-      name: 'MessageID'
+      name: 'Status'
       }
       ]
       } );
@@ -206,35 +207,44 @@ html
       ];
     script.
       function execute_graph(){
-      miliseconds = document.getElementById('mote-interval').value;
-      ip = document.getElementById('mote-url').value;
-      url = 'http://[' + ip + ']/data.json';
+      var counter = 1;
+      var Protocol = "HTTP";
+      var ip = document.getElementById('mote-url').value;
+      var miliseconds = document.getElementById('mote-interval').value;
+      var url = 'http://localhost:3000/getHttpData?uri=' + ip;
       setInterval( function() {
-      graph.update();
-      getLatestData();
-      }, miliseconds );
-      };
-      var counter = 0;
-      function cb(payload){
-      // 183,915,117223,0,254
-      //  MessageID, UpTime, ClockTime, Temperature, Battery  //<-- This
+      jQuery.ajax({
+      type: 'GET',
+      cache: false,
+      url: url,
+      success: function(data) {
+      // 5,15,2006, 0.0000,0.305,1
+      //  MessageID, UpTime, ClockTime, Temperature, Battery, Status  //<-- This
       var string = "";
-      payload = String(payload);
-      string = payload.split(",");
+      console.log(data);
+      string = data.split(",");
       MessageID = parseInt(string[0]);
       UpTime = parseInt(string[1]);
       ClockTime = parseInt(string[2]);
       Temperature = parseInt(string[3]);
       Battery = parseInt(string[4]);
-      random.removeData(seriesData);
+      Status = parseInt(string[5]);
       seriesData[0].push( { x: UpTime, y: Temperature } );
       seriesData[1].push( { x: UpTime, y: Battery } );
-      seriesData[2].push( { x: UpTime, y: MessageID } );
-      random.addData(seriesData);
+      seriesData[2].push( { x: UpTime, y: Status } );
       graph.update();
-      var text = counter++ + "," + MessageID + "," + UpTime + "," + ClockTime + "," + Temperature + "," + Battery + "\n";
+      //random.removeData(seriesData);
+      //random.addData(seriesData);
+      graph.update();
+      var text = counter++ + "," + MessageID + "," + UpTime + "," + ClockTime + "," + Temperature + "," + Battery + "," + Status + "," + Protocol + "\n";
       addText(text);
       //console.log(payload);
+      },
+      error: function(data) {
+      console.log("Error");
+      }
+      });
+      }, miliseconds );
       };
       function addAnnotation(force) {
       if (messages.length > 0 && (force || Math.random() >= 0.95)) {
@@ -290,16 +300,3 @@ html
       };
       fileReader.readAsText(fileToLoad, "UTF-8");
       }
-      var getLatestData = function(){
-      var script_id = null;
-      var script = document.createElement('script');
-      script.setAttribute('type', 'text/javascript');
-      script.setAttribute('src', url);
-      script.setAttribute('id', 'script_id');
-      script_id = document.getElementById('script_id');
-      if(script_id){
-      document.getElementsByTagName('head')[0].removeChild(script_id);
-      }
-      // Insert <script> into DOM
-      document.getElementsByTagName('head')[0].appendChild(script);
-      };
