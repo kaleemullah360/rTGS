@@ -1,7 +1,7 @@
 {
   "name": "rTGS",
   "version": "2.1.0",
-  "description": "rTGS |This Application plots a real time graph using CoAP protocol at application layer.",
+  "description": "rTGS |This Application plots a real time graph using CoAP Observable protocol at application layer.",
   "private": true,
   "main": "./bin/www",
   "scripts": {
