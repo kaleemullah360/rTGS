@@ -122,12 +122,12 @@ var opts = URL.parse('coap://[aaaa::c30c:0:0:2]:5683/obs/mote')
 opts.observe = true   //  observe resources
 const coap  = require('coap'); // or coap
 
-var creq   = coap.request(opts);  
-creq.on('response', function(cres) {
+var c_req   = coap.request(opts);  
+c_req.on('response', function(c_res) {
   var interval = setInterval(function() {
-    if (cpayload != decoder.write(cres.payload)){
-      cpayload = decoder.write(cres.payload);
-  //cres.pipe(process.stdout);
+    if (cpayload != decoder.write(c_res.payload)){
+      cpayload = decoder.write(c_res.payload);
+  //c_res.pipe(process.stdout);
   //console.log("CoAP : " + cpayload);
   io.sockets.emit('wsn-data', {"data": cpayload}); // emit data to view/browser when response is arrived
 
@@ -149,6 +149,6 @@ creq.on('response', function(cres) {
       }
     }, 100)
 });
-creq.end(function closeconnection(){
+c_req.end(function closeconnection(){
     //connection.end();
   });
