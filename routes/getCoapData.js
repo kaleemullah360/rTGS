@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mote_uri = 'aaaa::c30c:0:0:2';
+var request_counter = 1;
 const StringDecoder = require('string_decoder').StringDecoder;
 const decoder = new StringDecoder('utf8');
 var Protocol = "CoAP";
@@ -23,6 +24,7 @@ router.get('/', function(req, res, next) {
 	var start = new Date();
 	var c_req = coap.request('coap://[' + mote_uri + ']:5683/sens/mote')
 	c_req.on('response', function(c_res) {
+		if (!c_res.payload) return;
 		var RTT = new Date() - start;
 		//console.info("Execution time: %dms", RTT);
 		c_payload = decoder.write(c_res.payload);
@@ -43,6 +45,15 @@ router.get('/', function(req, res, next) {
 
 		res.send(decoder.write(c_payload));
 	})
+
+	c_req.on('error', function(c_res) {
+	request_counter = request_counter + 1;
+    console.log("################### " + request_counter + " ###################\n");
+    console.log(c_res);
+    console.log("######################################\n");
+    return;
+	})
+
 	c_req.end()
 });
 
