@@ -2,13 +2,13 @@
 
 
 /*
-
+CoAP:
 cd ~/kontiki/examples/er-rest-example/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-coap-rtgs.upload nodeid=2 nodemac=2
-
+HTTP:
 cd ~/kontiki/examples/zolertia/z1/ipv6/z1-websense/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-http-rtgs.predict.upload nodeid=3 nodemac=3
-
+Border Router
 cd ~/kontiki/examples/ipv6/rpl-border-router/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make border-router.upload nodeid=1 nodemac=1
-
+Powertracing:
 cd ~/kontiki/examples/powertrace/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make example-powertrace.upload
 
 */
