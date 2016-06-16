@@ -14,7 +14,7 @@ var getMqttData = require('./routes/getMqttData');
 
 var rtgs_http = require('./routes/rtgs-http');
 var rtgs_coap = require('./routes/rtgs-coap');
-
+var rtgs_mqtt = require('./routes/rtgs-mqtt');
 
 var app = express();
 
