@@ -58,15 +58,16 @@ router.get('/', function(req, res, next) {
         /*-------------------- get Payload ---------------------*/
         // CoAP_0.5Sec_3Hop
         var Protocol = 'CoAP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
-        var c_req = coap.request('coap://[' + mote_uri + ']:5683/sens/mote')
+        var c_req = coap.request('coap://[' + mote_uri + ']:5683/obs/moves')
         c_req.on('response', function(c_res) {
             //console.info("RTT: %dms", RTT);
             if (!c_res.payload){
             return;	
             }
+
             c_payload = decoder.write(c_res.payload);
             //  populate database
-            //  MessageID, UpTime, ClockTime, Temperature, Battery, Status  //<-- This
+            //  MessageID, UpTime, ClockTime, Temperature, Battery, Status, RTT  //<-- This
             var string = "";
             string =String(c_payload);
             string = string.split(",");

@@ -72,7 +72,7 @@ router.get('/', function(req, res, next) {
      if (payload) {
       h_payload = decoder.write(payload);
 				//  populate database
-      //  MessageID, UpTime, ClockTime, Temperature, Battery, PowTrace  //<-- This
+      //  MessageID, UpTime, ClockTime, Temperature, Battery, Status, RTT  //<-- This
       var string = "";
       string =String(h_payload);
       string = string.split(",");

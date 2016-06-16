@@ -2,8 +2,11 @@
 
 
 /*
+MQTT:
+cd ~/kontiki/examples/zolertia/z1/mqtt-z1/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-mqtt-rtgs.predict.upload nodeid=4 nodemac=4
+
 CoAP:
-cd ~/kontiki/examples/er-rest-example/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-coap-rtgs.upload nodeid=2 nodemac=2
+cd ~/kontiki/examples/er-rest-example/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-coap-rtgs.predict.upload nodeid=2 nodemac=2
 HTTP:
 cd ~/kontiki/examples/zolertia/z1/ipv6/z1-websense/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-http-rtgs.predict.upload nodeid=3 nodemac=3
 Border Router
@@ -13,6 +16,9 @@ cd ~/kontiki/examples/powertrace/ && sudo make clean && sudo make TARGET=z1 save
 
 */
 
+var enable_socket = true;
+console.log("CoAP Socket Status: " + enable_socket + "\n");
+
 /**
  * Module dependencies.
  */
@@ -20,6 +26,7 @@ cd ~/kontiki/examples/powertrace/ && sudo make clean && sudo make TARGET=z1 save
  var app = require('../app');
  var debug = require('debug')('rTGS:server');
  var http = require('http');
+ var ping = require ("net-ping");
 
 /**
  * Get port from environment and store in Express.
@@ -107,7 +114,22 @@ return false;
  * Event listener for Socket Based MQTT Protocol.
  */
  if(enable_socket == true){
-var cpayload = "";  // varible to check if the current value is changed from the previous one
+
+ var io = require('socket.io')(server);
+ io.on('connection', function(socket){
+  console.log("User Connected");
+  // Not a Good Way
+  //socket.emit('wsn-data',{data: "10,100,100,100,100"});
+
+  socket.on('disconnect', function () {
+    console.log("User Disconnected");
+  });
+
+});
+
+var c_payload = "";  // varible to check if the current value is changed from the previous one
+var duration_sec = "1000";
+var n_hops = "1";
 var mote_uri = 'aaaa::c30c:0:0:2';
 var MessageID   = "nil";
 var UpTime      = "nil";
@@ -148,7 +170,7 @@ database : 'rtgs-db' // app database name
 connection.connect();
 
 var URL = require('url')
-var opts = URL.parse('coap://['+ mote_uri +']:5683/obs/mote')
+var opts = URL.parse('coap://['+ mote_uri +']:5683/obs/moves')
 var request_counter = 1;
 opts.observe = true   //  observe resources
 const coap  = require('coap'); // or coap
@@ -172,10 +194,10 @@ session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
             	return;	
             }
             var interval = setInterval(function() {
-            	if (cpayload != decoder.write(c_res.payload)){
+            	if (c_payload != decoder.write(c_res.payload)){
             		c_payload = decoder.write(c_res.payload);
             //  populate database
-            //  MessageID, UpTime, ClockTime, Temperature, Battery, Status  //<-- This
+            //  MessageID, UpTime, ClockTime, Temperature, Battery, Status, RTT  //<-- This
             var string = "";
             string =String(c_payload);
             string = string.split(",");
@@ -188,10 +210,10 @@ session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
             connection.query('INSERT INTO `rtgs-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Status, Protocol, RTT) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Status+'\', \''+Protocol+'\', \''+RTT+'\')', function(err, rows, fields) {
               if (err) throw err;
             });
-
+            console.log(c_payload + "," + RTT);
 	      	io.sockets.emit('wsn-data', {"data": c_payload + "," + RTT}); // emit data to view/browser when response is arrived
 	      }
-	  }, 100)
+	  }, 10000)
         })
         c_req.on('error', function(c_res) {
         	request_counter = request_counter + 1;
