@@ -47,19 +47,19 @@ cd ~/kontiki/examples/powertrace/ && sudo make clean && sudo make TARGET=z1 save
  */
 
  function normalizePort(val) {
-  var port = parseInt(val, 10);
+ 	var port = parseInt(val, 10);
 
-  if (isNaN(port)) {
+ 	if (isNaN(port)) {
     // named pipe
     return val;
-  }
+}
 
-  if (port >= 0) {
+if (port >= 0) {
     // port number
     return port;
-  }
+}
 
-  return false;
+return false;
 }
 
 /**
@@ -67,26 +67,26 @@ cd ~/kontiki/examples/powertrace/ && sudo make clean && sudo make TARGET=z1 save
  */
 
  function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+ 	if (error.syscall !== 'listen') {
+ 		throw error;
+ 	}
 
-  var bind = typeof port === 'string'
-  ? 'Pipe ' + port
-  : 'Port ' + port;
+ 	var bind = typeof port === 'string'
+ 	? 'Pipe ' + port
+ 	: 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
-    case 'EACCES':
-    console.error(bind + ' requires elevated privileges');
-    process.exit(1);
-    break;
-    case 'EADDRINUSE':
-    console.error(bind + ' is already in use');
-    process.exit(1);
-    break;
-    default:
-    throw error;
+  	case 'EACCES':
+  	console.error(bind + ' requires elevated privileges');
+  	process.exit(1);
+  	break;
+  	case 'EADDRINUSE':
+  	console.error(bind + ' is already in use');
+  	process.exit(1);
+  	break;
+  	default:
+  	throw error;
   }
 }
 
@@ -95,168 +95,121 @@ cd ~/kontiki/examples/powertrace/ && sudo make clean && sudo make TARGET=z1 save
  */
 
  function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-  ? 'pipe ' + addr
-  : 'port ' + addr.port;
-  debug('Listening on ' + bind);
-}
+ 	var addr = server.address();
+ 	var bind = typeof addr === 'string'
+ 	? 'pipe ' + addr
+ 	: 'port ' + addr.port;
+ 	debug('Listening on ' + bind);
+ }
 
 
 /**
  * Event listener for Socket Based MQTT Protocol.
  */
  if(enable_socket == true){
-  
-// Create socket for emmitting data to view.
-var io = require('socket.io')(server);
-io.on('connection', function(socket){
-  console.log("User Connected");
-  // Not a Good Way
-  socket.emit('wsn-data',{data: "1,5,7223,0,124"});
-
-  socket.on('disconnect', function () {
-    console.log("User Disconnected");
-  });
-
-});
-
-// create MYSQL Server connection to store data
-var ping = require ("net-ping");
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
-  host     : 'localhost', // default
-  user     : 'root',  // default
-  password : '',  // default
-  database : 'rtgs' // app database name
-});
-connection.connect();
-
+var cpayload = "";  // varible to check if the current value is changed from the previous one
+var mote_uri = 'aaaa::c30c:0:0:2';
 var MessageID   = "nil";
 var UpTime      = "nil";
 var ClockTime   = "nil";
 var Temperature = "nil";
 var Battery     = "nil";
 var PowTrace    = "nil";
-var RTT     = "nil";
+var RTT 		= "nil";
 
-  /*-------------------- get Round Trip Time ---------------------*/
-  session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
-      RTT = rcvd - sent;
-      //console.log ("Target " + mote_uri + ": RTT (ms=" + RTT + ")");
+/*-------------------- PING Lib Configs ---------------------*/
+// Default options
+var options = {
+	networkProtocol: ping.NetworkProtocol.IPv6,
+	packetSize: 64,
+	retries: 1,
+	sessionId: (process.pid % 65535),
+	timeout: 10000,
+	ttl: 128
+};
+var session = ping.createSession (options);
 
-      if(!rtt_error){
-      /*-------------------- get Payload ---------------------*/
-      // CoAP_0.5Sec_3Hop
-      var Protocol = 'CoAP_OBS_'+ duration_sec +'Sec_'+ n_hops +'Hop';
-      var c_req = coap.request('coap://[' + mote_uri + ']:5683/sens/mote')
-      c_req.on('response', function(c_res) {
-          //console.info("RTT: %dms", RTT);
-          if (!c_res.payload){
-          return; 
-          }
-          c_payload = decoder.write(c_res.payload);
-          //  populate database
-          //  MessageID, UpTime, ClockTime, Temperature, Battery, Status  //<-- This
-          var string = "";
-          string =String(c_payload);
-          string = string.split(",");
-          MessageID   = (string[0]) ? string[0] : '0' ;
-          UpTime      = (string[1]) ? string[1] : '0' ;
-          ClockTime   = (string[2]) ? string[2] : '0' ;
-          Temperature = (string[3]) ? string[3] : '0' ;
-          Battery     = (string[4]) ? string[4] : '0' ;
-          Status      = (string[5]) ? string[5] : '0' ;
-        connection.query('INSERT INTO `rtgs-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Status, Protocol) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Status+'\', \''+Protocol+'\')', function(err, rows, fields) {
-          if (err) throw err;
-        });
-              io.sockets.emit('wsn-data', {"data": c_payload + "," + RTT}); // emit data to view/browser when response is arrived
-              })
-          c_req.on('error', function(c_res) {
-              request_counter = request_counter + 1;
-              console.log("[===============< " + request_counter + " >===============]\n");
-              console.log(c_res);
-              console.log("[==================================]\n");
-              return;
-              })
-          c_req.end()
+session.on ("error", function (error) {
+	console.trace (error.toString ());
+});
+/*-------------------- End PING Lib Configs ------------------*/
 
-            /*-------------------- End get Payload ---------------------*/
-      }else{
-        console.log("CoAP: Ping failed, Device is not reachable, Trying again ... \n");
-        return; // No RTT
-      }
-
-  });
-  /*-------------------- End get Round Trip Time ---------------------*/
-
-} // enable_socket condition
-
-
-
-
-
-
-
+var request_counter = 1;
+const StringDecoder = require('string_decoder').StringDecoder;
+const decoder = new StringDecoder('utf8');
 // create MYSQL Server connection to store data
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
-  host     : 'localhost', // default
-  user     : 'root',  // default
-  password : '',    // default set password 1234
-  database : 'rtgs' // app database name
+host     : 'localhost', // default
+user     : 'root',  // default
+password : '',  // default
+database : 'rtgs' // app database name
 });
 connection.connect();
 
-
-/* GET CoAP Data. */
-var Protocol = "CoAP_OBS";
-var cpayload = "";  // varible to check if the current value is changed from the previous one
-const StringDecoder = require('string_decoder').StringDecoder;  // decoding paylaod data
-const decoder = new StringDecoder('utf8');  // character set
 var URL = require('url')
-var opts = URL.parse('coap://[aaaa::c30c:0:0:2]:5683/obs/mote')
+var opts = URL.parse('coap://['+ mote_uri +']:5683/obs/mote')
 var request_counter = 1;
 opts.observe = true   //  observe resources
 const coap  = require('coap'); // or coap
 
 var c_req   = coap.request(opts);  
-c_req.on('response', function(c_res) {
-  if (!c_res.payload) return;
-  var interval = setInterval(function() {
-    if (cpayload != decoder.write(c_res.payload)){
-      cpayload = decoder.write(c_res.payload);
-  //c_res.pipe(process.stdout);
-  //console.log("CoAP : " + cpayload);
-  io.sockets.emit('wsn-data', {"data": cpayload}); // emit data to view/browser when response is arrived
 
-    //  populate database
-        //  MessageID, UpTime, ClockTime, Temperature, Battery, Status  //<-- This
-        var string = "";
-        string =String(cpayload);
-        string = string.split(",");
-        var MessageID = string[0];
-        var UpTime = string[1];
-        var ClockTime = string[2];
-        var Temperature = string[3];
-        var Battery = string[4];
-        var Status = string[5];
-        connection.query('INSERT INTO `rtgs-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Status, Protocol) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Status+'\', \''+Protocol+'\')', function(err, rows, fields) {
-          if (err) throw err;
-        });
+/* GET CoAP Data. */
 
+/*-------------------- get Round Trip Time ---------------------*/
+session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
+	RTT = rcvd - sent;
+        //console.log ("Target " + mote_uri + ": RTT (ms=" + RTT + ")");
+
+        if(!rtt_error){
+        	/*-------------------- get Payload ---------------------*/
+        // CoAP_0.5Sec_3Hop
+        var Protocol = 'CoAP_OBS_'+ duration_sec +'Sec_'+ n_hops +'Hop';
+        c_req.on('response', function(c_res) {
+            //console.info("RTT: %dms", RTT);
+            if (!c_res.payload){
+            	return;	
+            }
+            var interval = setInterval(function() {
+            	if (cpayload != decoder.write(c_res.payload)){
+            		c_payload = decoder.write(c_res.payload);
+            //  populate database
+            //  MessageID, UpTime, ClockTime, Temperature, Battery, Status  //<-- This
+            var string = "";
+            string =String(c_payload);
+            string = string.split(",");
+            MessageID   = (string[0]) ? string[0] : '0' ;
+            UpTime      = (string[1]) ? string[1] : '0' ;
+            ClockTime   = (string[2]) ? string[2] : '0' ;
+            Temperature = (string[3]) ? string[3] : '0' ;
+            Battery     = (string[4]) ? string[4] : '0' ;
+            Status    	= (string[5]) ? string[5] : '0' ;
+            connection.query('INSERT INTO `rtgs-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Status, Protocol) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Status+'\', \''+Protocol+'\')', function(err, rows, fields) {
+            	if (err) throw err;
+            });
+
+	      	io.sockets.emit('wsn-data', {"data": c_payload + "," + RTT}); // emit data to view/browser when response is arrived
+	      }
+	  }, 100)
+        })
+        c_req.on('error', function(c_res) {
+        	request_counter = request_counter + 1;
+        	console.log("[===============< " + request_counter + " >===============]\n");
+        	console.log(c_res);
+        	console.log("[==================================]\n");
+        	return;
+        })
+        c_req.end()
+
+        /*-------------------- End get Payload ---------------------*/
+    }else{
+    	console.log("CoAP: Ping failed, Device is not reachable, Trying again ... \n");
+          return;	// No RTT
       }
-    }, 100)
-});
 
-c_req.on('error', function(c_res) {
-request_counter = request_counter + 1;
-  console.log("################### " + request_counter + " ###################\n");
-  console.log(c_res);
-  console.log("######################################\n");
-  return;
-})
-
-c_req.end(function closeconnection(){
-    //connection.end();
   });
+/*-------------------- End get Round Trip Time ---------------------*/
+
+
+} // enable_socket condition
