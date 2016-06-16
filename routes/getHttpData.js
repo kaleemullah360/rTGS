@@ -37,7 +37,7 @@ var connection = mysql.createConnection({
   host     : 'localhost', // default
   user     : 'root',  // default
   password : '',  // default
-  database : 'rtgs' // app database name
+  database : 'rtgs-db' // app database name
 });
 connection.connect();
 
@@ -82,8 +82,8 @@ router.get('/', function(req, res, next) {
       Temperature = (string[3]) ? string[3] : '0' ;
       Battery     = (string[4]) ? string[4] : '0' ;
       Status    = (string[5]) ? string[5] : '0' ;
-      connection.query('INSERT INTO `rtgs-table` (MessageID, UpTime, ClockTime, Temperature, Battery, Status, Protocol) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Status+'\', \''+Protocol+'\')', function(err, rows, fields) {
-      	if (err) throw err;
+      connection.query('INSERT INTO `rtgs-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Status, Protocol, RTT) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Status+'\', \''+Protocol+'\', \''+RTT+'\')', function(err, rows, fields) {
+        if (err) throw err;
       });
 
       res.send(h_payload + "," + RTT);
