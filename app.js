@@ -10,6 +10,7 @@ var users = require('./routes/users');
 
 var getCoapData = require('./routes/getCoapData');
 var getHttpData = require('./routes/getHttpData');
+var getMqttData = require('./routes/getMqttData');
 
 var rtgs_http = require('./routes/rtgs-http');
 var rtgs_coap = require('./routes/rtgs-coap');
@@ -34,9 +35,11 @@ app.use('/users', users);
 
 app.use('/getCoapData', getCoapData);
 app.use('/getHttpData', getHttpData);
+app.use('/getMqttData', getMqttData);
 
 app.use('/http', rtgs_http);
 app.use('/coap', rtgs_coap);
+app.use('/mqtt', rtgs_mqtt);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
