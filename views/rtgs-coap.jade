@@ -235,10 +235,10 @@ html
       Battery = parseInt(string[4]);
       Status_str = string[5];
       RTT = parseInt(string[6]);
-      if(Status_str == " STANDING"){Status = 1;}
-      if(Status_str == " WALKING"){Status = 2;}
-      if(Status_str == " RUNNING"){Status = 3;}
-      if(Status_str == " FALLING"){Status = 4;}
+      if(Status_str == "STANDING"){Status = 1;}
+      if(Status_str == "WALKING"){Status = 2;}
+      if(Status_str == "RUNNING"){Status = 3;}
+      if(Status_str == "FALLING"){Status = 4;}
       seriesData[0].push( { x: UpTime, y: Temperature } );
       seriesData[1].push( { x: UpTime, y: Battery } );
       seriesData[2].push( { x: UpTime, y: Status } );

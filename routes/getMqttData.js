@@ -60,10 +60,10 @@ router.get('/', function(req, res, next) {
       /*-------------------- get Payload ---------------------*/
         // MQTT_0.5Sec_3Hop
         var Protocol = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
-        client.subscribe('iot-2/evt/status/fmt/json', function(){/* console.log("Event: subscribed on topic"); */});
-        
-        client.on('message', function(topic, payload) {
-          m_payload = decoder.write(payload);
+      client.subscribe('iot-2/evt/status/fmt/json', function(){/* console.log("Event: subscribed on topic"); */});
+      
+      client.on('message', function(topic, payload) {
+        m_payload = decoder.write(payload);
             //  populate database
             //  MessageID, UpTime, ClockTime, Temperature, Battery, Status, RTT  //<-- This
             var string = "";
@@ -93,11 +93,11 @@ router.get('/', function(req, res, next) {
 //            client.unsubscribe('iot-2/evt/status/fmt/json', function(){console.log("Event: un-subscribed on topic");});
 });
 
-        res.send(m_payload + "," + RTT);
+      res.send(m_payload + "," + RTT);
 
-        /*-------------------- End get Payload ---------------------*/
-      }else{
-        console.log("MQTT: Ping failed, Device is not reachable, Trying again ... \n");
+      /*-------------------- End get Payload ---------------------*/
+    }else{
+      console.log("MQTT: Ping failed, Device is not reachable, Trying again ... \n");
           return;	// No RTT
         }
 
