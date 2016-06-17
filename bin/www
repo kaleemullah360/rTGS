@@ -7,16 +7,19 @@ cd ~/kontiki/examples/zolertia/z1/mqtt-z1/ && sudo make clean && sudo make TARGE
 
 CoAP:
 cd ~/kontiki/examples/er-rest-example/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-coap-rtgs.predict.upload nodeid=2 nodemac=2
+
 HTTP:
 cd ~/kontiki/examples/zolertia/z1/ipv6/z1-websense/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make z1-http-rtgs.predict.upload nodeid=3 nodemac=3
-Border Router
+
+Border Router:
 cd ~/kontiki/examples/ipv6/rpl-border-router/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make border-router.upload nodeid=1 nodemac=1
+
 Powertracing:
 cd ~/kontiki/examples/powertrace/ && sudo make clean && sudo make TARGET=z1 savetarget && sudo make z1-reset && sudo make example-powertrace.upload
 
 */
 
-var enable_socket = false;
+var enable_socket = true;
 console.log("CoAP Socket Status: " + enable_socket + "\n");
 
 /**
@@ -213,7 +216,7 @@ session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
             console.log(c_payload + "," + RTT);
 	      	io.sockets.emit('wsn-data', {"data": c_payload + "," + RTT}); // emit data to view/browser when response is arrived
 	      }
-	  }, 10000)
+	  }, 100)
         })
         c_req.on('error', function(c_res) {
         	request_counter = request_counter + 1;
