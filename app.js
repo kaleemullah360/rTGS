@@ -16,6 +16,10 @@ var rtgs_http = require('./routes/rtgs-http');
 var rtgs_coap = require('./routes/rtgs-coap');
 var rtgs_mqtt = require('./routes/rtgs-mqtt');
 
+var get_http = require('./routes/get-http');
+var get_coap = require('./routes/get-coap');
+var get_mqtt = require('./routes/get-mqtt');
+
 var app = express();
 
 // view engine setup
@@ -40,6 +44,10 @@ app.use('/getMqttData', getMqttData);
 app.use('/http', rtgs_http);
 app.use('/coap', rtgs_coap);
 app.use('/mqtt', rtgs_mqtt);
+
+app.use('/get-http', get_http);
+app.use('/get-coap', get_coap);
+app.use('/get-mqtt', get_mqtt);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
