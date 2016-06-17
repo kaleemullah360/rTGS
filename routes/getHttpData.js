@@ -46,9 +46,9 @@ var request = require('request');
 /* GET HTTP Data. */
 //	http://localhost:3000/getHttpData?uri=aaaa::c30c:0:0:3
 router.get('/', function(req, res, next) {
-	var mote_uri = req.query.uri;
-	var duration_sec = req.query.d;
-	var n_hops = req.query.h;
+  var mote_uri        = req.query.uri ? req.query.uri : mote_uri ;
+  var duration_sec    = req.query.d   ? req.query.d   : '1' ;
+  var n_hops          = req.query.h   ? req.query.h   : '1' ;
 
   /*-------------------- get Round Trip Time ---------------------*/
   session.pingHost (mote_uri, function (rtt_error, mote_uri, sent, rcvd) {
