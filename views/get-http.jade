@@ -25,16 +25,8 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
     var ip = document.getElementById('mote-url').value;
     var limit = document.getElementById('mote-index').value;
     var milliseconds = document.getElementById('mote-interval').value;
-    // MQTT_0.5Sec_3Hop
-    if (milliseconds == '500'){
-        duration_sec = '0.5';
-    }else if(milliseconds == '1000'){
-        duration_sec = '1';
-    }else if(milliseconds == '10000'){
-        duration_sec = '10';
-    }else{
-        duration_sec = 'x';
-    }
+    // HTTP_0.5Sec_3Hop
+    var duration_sec = milliseconds.substring(0, 1);
     var n_hops = document.getElementById('n-hops').value;
     var url = 'http://localhost:3000/getHttpData?uri=' + ip + '&d=' + duration_sec + '&h=' + n_hops;
     document.title = 'HTTP_'+ duration_sec +'Sec_'+ n_hops +'Hop';
