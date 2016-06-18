@@ -213,7 +213,7 @@ html
       function execute_graph(){
       var counter = 1;
       var Status = 0;
-      var Protocol = "CoAP";
+      var Protocol = "MQTT";
       var ip = document.getElementById('mote-url').value;
       var miliseconds = document.getElementById('mote-interval').value;
       var url = 'http://localhost:3000/getMqttData?uri=' + ip;
@@ -232,7 +232,7 @@ html
       UpTime = parseInt(string[1]);
       ClockTime = parseInt(string[2]);
       Temperature = parseInt(string[3]);
-      Battery = parseInt(string[4]);
+      Battery = parseFloat(string[4]);
       Status_str = string[5];
       RTT = parseInt(string[6]);
       if(Status_str == "STANDING"){Status = 1;}
