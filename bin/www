@@ -131,7 +131,7 @@ return false;
 });
 
 var c_payload = "";  // varible to check if the current value is changed from the previous one
-var duration_sec = "1000";
+var duration_sec = "nil";
 var n_hops = "1";
 var mote_uri = 'aaaa::c30c:0:0:2';
 var MessageID   = "nil";
@@ -140,7 +140,7 @@ var ClockTime   = "nil";
 var Temperature = "nil";
 var Battery     = "nil";
 var PowTrace    = "nil";
-var RTT 		= "nil";
+var RTT 		    = "nil";
 
 /*-------------------- PING Lib Configs ---------------------*/
 // Default options
