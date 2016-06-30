@@ -27,6 +27,10 @@ Node-CoAP [Node-CoAP github](https://github.com/mcollina/node-coap).
 
 Express Node [Installing Expressjs](http://expressjs.com/en/starter/installing.html).
 
+net-ping [net-ping npm](https://www.npmjs.com/package/net-ping)
+
+request [request npm](https://www.npmjs.com/package/request)
+
 ### For more information, see the Contiki website:
 
 [http://contiki-os.org](http://contiki-os.org)
