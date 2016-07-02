@@ -41,7 +41,7 @@ request [request npm](https://www.npmjs.com/package/request)
 install dependencies.
 
 ```sh
-npm install
+sudo npm install
 ```
 Then, run the Node Js server on default port,
 
