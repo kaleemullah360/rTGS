@@ -73,11 +73,11 @@ router.get('/', function(req, res, next) {
             string =String(c_payload);
             string = string.split(",");
             MessageID   = (string[0]) ? string[0] : '0' ;
-            UpTime      = (string[5]) ? string[5] : '0' ;
+            UpTime      = (string[1]) ? string[1] : '0' ;
             ClockTime   = (string[2]) ? string[2] : '0' ;
             Temperature = (string[3]) ? string[3] : '0' ;
             Battery     = (string[4]) ? string[4] : '0' ;
-            Status    	= (string[1]) ? string[1] : '0' ;
+            Status    	= (string[5]) ? string[5] : '0' ;
             connection.query('INSERT INTO `rtgs-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Status, Protocol, RTT) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Status+'\', \''+Protocol+'\', \''+RTT+'\')', function(err, rows, fields) {
                 if (err) throw err;
             });

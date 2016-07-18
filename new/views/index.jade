@@ -113,7 +113,7 @@ html
       var text = "ID,MessageID,UpTime,ClockTime,Temperature,Battery,Status,RTT,Protocol\n";
       addText(text);
       // set up our data series with 150 random data points
-      var seriesData = [[{ x: 0, y: 0}], [{ x: 0, y: 0}], [{ x: 0, y: 0 }], [{ x: 0, y: 0 }], [{ x: 0, y: 0 }]];
+      var seriesData = [[{ x: 0, y: 0}], [{ x: 0, y: 0}]];
       //var random = new Rickshaw.Fixtures.RandomData(150);
       //for (var i = 0; i < 150; i++) {
       //random.addData(seriesData);}
@@ -130,18 +130,10 @@ html
       {
       color: palette.color(),
       data: seriesData[0],
-      name: 'Temperature'
-      }, {
-      color: palette.color(),
-      data: seriesData[1],
-      name: 'Battery'
-      }, {
-      color: palette.color(),
-      data: seriesData[2],
       name: 'Status'
       }, {
       color: palette.color(),
-      data: seriesData[3],
+      data: seriesData[1],
       name: 'RTT'
       }
       ]
@@ -227,19 +219,14 @@ html
       string = payload.data.split(",");
       MessageID = parseInt(string[0]);
       UpTime = parseInt(string[1]);
-      ClockTime = parseInt(string[2]);
-      Temperature = parseInt(string[3]);
-      Battery = parseFloat(string[4]);
-      Status_str = string[5];
+      Status_str = string[2];
       RTT = parseInt(string[6]);
       if(Status_str == "STANDING"){Status = 1;}
       if(Status_str == "WALKING"){Status = 2;}
       if(Status_str == "RUNNING"){Status = 3;}
       if(Status_str == "FALLING"){Status = 4;}
-      seriesData[0].push( { x: UpTime, y: Temperature } );
-      seriesData[1].push( { x: UpTime, y: Battery } );
-      seriesData[2].push( { x: UpTime, y: Status } );
-      seriesData[3].push( { x: UpTime, y: RTT } );
+      seriesData[0].push( { x: UpTime, y: Status } );
+      seriesData[1].push( { x: UpTime, y: RTT } );
       graph.update();
       //random.removeData(seriesData);
       //random.addData(seriesData);
