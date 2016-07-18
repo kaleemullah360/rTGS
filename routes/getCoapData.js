@@ -81,7 +81,6 @@ router.get('/', function(req, res, next) {
             connection.query('INSERT INTO `rtgs-tbl` (MessageID, UpTime, ClockTime, Temperature, Battery, Status, Protocol, RTT) VALUES (\''+MessageID+'\',\''+UpTime+'\', \''+ClockTime+'\', \''+Temperature+'\', \''+Battery+'\', \''+Status+'\', \''+Protocol+'\', \''+RTT+'\')', function(err, rows, fields) {
                 if (err) throw err;
             });
-            io.sockets.emit('wsn-data', {"data": c_payload + "," + RTT}); // emit data to view/browser when response is arrived
             res.send(c_payload + "," + RTT);
         })
         c_req.on('error', function(c_res) {
