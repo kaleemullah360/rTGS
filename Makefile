@@ -1,3 +1,6 @@
+run:
+	sudo npm start
+
 clean:
 	rm -f *.exe
 
@@ -22,3 +25,6 @@ push:
 
 pull:
 	git pull origin master
+
+setup-project:
+	sudo bash ./runonce.sh
