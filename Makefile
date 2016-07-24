@@ -1,6 +1,12 @@
 run:
 	sudo npm start
 
+clean:
+	rm -f *.exe
+
+clean-all: 
+	rm -f *.o
+	rm -f *.exe
 
 view-project:
 	firefox https://github.com/kaleemullah360/rTGS &
