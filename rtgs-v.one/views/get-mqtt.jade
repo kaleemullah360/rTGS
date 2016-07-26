@@ -1,0 +1,61 @@
+doctype strict
+html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en')
+  script(type='text/javascript', src='js/jquery-2.2.0.min.js')
+  title MQTT Protocol Evaluation
+  body
+    h3 MQTT Protocol Evaluation | Multi Hop
+    div.input-section(style="")
+      label IPV6 Address:
+      input#mote-url(style="width: 110px;", type='text', value='aaaa::c30c:0:0:4')
+      &nbsp | 
+      label No of Packets:
+      input#mote-index(style="width: 70px;", type='number', value='100')
+      &nbsp | 
+      label Request Interval (milliseconds):
+      input#mote-interval(style="width: 50px;", type='number', value='1000')
+      &nbsp | 
+      label Hop Count:
+      input#n-hops(style="width: 30px;", type='text', value='1')
+      button(style="float: right;", autofocus='', type='button', onclick='javascript: get_values()') Start
+    hr
+    ol#show-temp('reversed')
+  script(type='text/javascript').
+    function get_values() {
+    var PrevMessageID = 'nil';
+    var index = 1;
+    var ip = document.getElementById('mote-url').value;
+    var limit = document.getElementById('mote-index').value;
+    var milliseconds = document.getElementById('mote-interval').value;
+    // MQTT_0.5Sec_3Hop
+    var duration_sec = milliseconds.substring(0, 1);
+    var n_hops = document.getElementById('n-hops').value;
+    var url = 'http://localhost:3000/getMqttData?uri=' + ip + '&d=' + duration_sec + '&h=' + n_hops;
+    document.title = 'MQTT_'+ duration_sec +'Sec_'+ n_hops +'Hop';
+    window.setInterval(function () {
+    if (index <= limit) {
+    $(function () {
+    $.ajax({
+    type: 'GET',
+    cache: false,
+    url: url,
+    success: function(data) {
+    var string = "";
+    string =String(data);
+    string = string.split(",");
+    MessageID   = (string[0]) ? string[0] : '0' ;
+    if(MessageID != PrevMessageID){
+    $('#show-temp').prepend('<li><span>' + data + '</span></li>');
+    PrevMessageID = MessageID;
+    index++;
+    }
+    },
+    error: function(data) {
+    }
+    });
+    });
+    } else {
+    return;
+    }
+    console.log("MSGiD" + index);
+    }, milliseconds);
+    }
