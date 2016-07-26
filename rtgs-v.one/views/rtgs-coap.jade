@@ -44,12 +44,12 @@ html
       form#side_panel
         section
           h3
-            | rTGS | This Application plots a real time graph using CoAP Observable protocol at application layer.
+            | rTGS | This Application plots a real time graph using CoAP protocol at application layer.
           label IPV6 Address:
-          input#mote-url(type='text', disabled, value='aaaa::c30c:0:0:2')
+          input#mote-url(type='text', value='aaaa::c30c:0:0:2')
           label Request Interval (milliseconds):
-          input#mote-interval(type='number', disabled, value='5000')
-          button(type='button', autofocus='', disabled, onclick='javascript: execute_graph()') Start
+          input#mote-interval(type='number', value='5000')
+          button(type='button', autofocus='', onclick='javascript: execute_graph()') Start
         section
           #legend
         section
@@ -210,21 +210,24 @@ html
       "Added documentation for new methods"
       ];
     script.
-    script(src='js/socket.io.js')
-    script.
+      function execute_graph(){
+      var counter = 1;
+      var Status = 0;
+      var Protocol = "CoAP";
       var ip = document.getElementById('mote-url').value;
       var miliseconds = document.getElementById('mote-interval').value;
       var url = 'http://localhost:3000/getCoapData?uri=' + ip;
-      var counter = 1;
-      var Protocol = "CoAP";
-      var socket = io();
-      socket.on('wsn-data', function(payload){
-      console.log(payload.data);
-      // 5,15,2006, 0.0000,0.305,1
+      setInterval( function() {
+      jQuery.ajax({
+      type: 'GET',
+      cache: false,
+      url: url,
+      success: function(data) {
+      // 5,15,2006, 0.0000,0.305,1,34
       //  MessageID, UpTime, ClockTime, Temperature, Battery, Status, RTT  //<-- This
       var string = "";
-      console.log(payload.data);
-      string = payload.data.split(",");
+      console.log(data);
+      string = data.split(",");
       MessageID = parseInt(string[0]);
       UpTime = parseInt(string[1]);
       ClockTime = parseInt(string[2]);
@@ -247,7 +250,13 @@ html
       var text = counter++ + "," + MessageID + "," + UpTime + "," + ClockTime + "," + Temperature + "," + Battery + "," + Status + "," + RTT + "," + Protocol + "\n";
       addText(text);
       //console.log(payload);
+      },
+      error: function(data) {
+      console.log("Error");
+      }
       });
+      }, miliseconds );
+      };
       function addAnnotation(force) {
       if (messages.length > 0 && (force || Math.random() >= 0.95)) {
       annotator.add(seriesData[2][seriesData[2].length-1].x, messages.shift());
