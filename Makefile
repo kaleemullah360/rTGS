@@ -21,10 +21,10 @@ endif
 push:
 	git add -A
 	git commit -m $(c)
-	git push origin master
+	git push origin rtgs-v.one
 
 pull:
-	git pull origin master
+	git pull origin rtgs-v.one
 
 setup-project:
 	sudo bash ./runonce.sh
