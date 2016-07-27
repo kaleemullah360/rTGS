@@ -26,5 +26,8 @@ push:
 pull:
 	git pull origin master
 
+sb:
+	git checkout rtgs-v.one
+
 setup-project:
 	sudo bash ./runonce.sh
