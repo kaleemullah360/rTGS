@@ -9,3 +9,7 @@ The brach contains commits for rTGS with feature of sending minimal payload to c
 the payload contains:
 
 Messgae No, Up Time, Status.
+
+## Usage
+
+Flash mote with desired contiki Application and start server.
