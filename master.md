@@ -9,3 +9,7 @@ The Master brach contains commits for rTGS with feature of sending all the paylo
 the payload contains:
 
 Messgae No, Up Time, Battery, Temperature, Status.
+
+## Usage:
+
+Flash Mote with desired kontiki application and start the server.
