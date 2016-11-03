@@ -151,9 +151,9 @@ var RTT 		= "nil";
 // Default options
 var options = {
 	networkProtocol: ping.NetworkProtocol.IPv6,
-	packetSize: 64,
+	packetSize: 64,	// enough
 	retries: 1,
-	sessionId: (process.pid % 65535),
+	sessionId: (process.pid % 65535),	//why ?
 	timeout: 10000,
 	ttl: 128
 };
