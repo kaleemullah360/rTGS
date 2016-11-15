@@ -23,13 +23,31 @@ then
 fi
 
 # Install coap library
-npm install coap --save
+read -p "Want me to setup coap? (y/n)" -n 1 -r
+echo    # (optional) move to a new line
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+	npm install coap --save
+	    #exit 1
+fi
 
 # Install ping library
-npm install net-ping
+read -p "Want me to setup net-ping? (y/n)" -n 1 -r
+echo    # (optional) move to a new line
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+	npm install net-ping
+	    #exit 1
+fi
 
 # Install Project Packages
-npm install
+read -p "Want me to npm install? (y/n)" -n 1 -r
+echo    # (optional) move to a new line
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+	npm install
+	    #exit 1
+fi
 
 read -p "Want me to setup node-red? (y/n)" -n 1 -r
 echo    # (optional) move to a new line
@@ -37,6 +55,10 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
 	sudo npm install -g node-red
 	sudo npm install -g i18next
+	echo "to start/run node-red: node-red"
+	echo ""
 	echo "To open Node-Red use: http://localhost:1880"
     #exit 1
 fi
+
+exit 1
