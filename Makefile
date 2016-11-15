@@ -26,11 +26,11 @@ else
 	@echo "Current USER: $(USER)"	
 	git add -A
 	git commit -m $(m)
-	git push origin master
+	git push origin rtgs-v.one
 endif
 
 pull:
-	git pull origin master
+	git pull origin rtgs-v.one
 
 setup-project:
 	sudo bash ./runonce.sh
@@ -72,3 +72,7 @@ mysql-remove:
 	@echo "sudo apt-get purge mysql-client-core-5.7"
 	@echo "sudo rm -rf /var/log/mysql"
 	@echo "sudo rm -rf /etc/mysql"
+
+sb:
+	git checkout master
+	#git checkout rtgs-v.one
