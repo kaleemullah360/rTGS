@@ -44,9 +44,9 @@ html
       form#side_panel
         section
           h3
-            | rTGS | This Application plots a real time graph using MQTT protocol at application layer.
+            | rTGS | This Application plots a real time graph using CoAP Observable protocol at application layer.
           label IPV6 Address:
-          input#mote-url(type='text', disabled, value='aaaa::c30c:0:0:4')
+          input#mote-url(type='text', disabled, value='aaaa::c30c:0:0:2')
           label Request Interval (milliseconds):
           input#mote-interval(type='number', disabled, value='5000')
           button(type='button', autofocus='', disabled, onclick='javascript: execute_graph()') Start
@@ -206,9 +206,9 @@ html
     script.
       var ip = document.getElementById('mote-url').value;
       var miliseconds = document.getElementById('mote-interval').value;
-      var url = 'http://localhost:3000/getMqttData?uri=' + ip;
+      var url = 'http://localhost:3000/getCoapData?uri=' + ip;
       var counter = 1;
-      var Protocol = "MQTT";
+      var Protocol = "CoAP";
       var socket = io();
       socket.on('wsn-data', function(payload){
       console.log(payload.data);
